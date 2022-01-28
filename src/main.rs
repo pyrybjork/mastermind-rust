@@ -11,43 +11,51 @@ fn main() {
         solution[i] = numbers.remove(rng.gen_range(0..numbers.len()))
     }
 
-    println!("{:?}", solution);
-
     let mut board = [[0u8; 4]; 9];
     let mut correct_num = [0u8; 9];
     let mut correct_place = [0u8; 9];
-    let mut new_row = [0u8; 4];
+    let mut new_row: [u8; 4];
 
     for i in 0..9 {
         print_board(board, correct_num, correct_place);
-        new_row = get_new_row();
+        new_row = get_new_valid_row();
         board[i] = new_row.clone();
-        correct_num[i] = calculate_correct_nums(solution, new_row); 
-        correct_place[i] = calculate_correct_places(solution, new_row);
+        correct_num[i] = calculate_correct_nums(&solution, &new_row); 
+        correct_place[i] = calculate_correct_places(&solution, &new_row);
 
         if new_row == solution {
-            println!("You won");
+            println!("You cracked the code!");
             break;
         } else if i == 8 {
-            println!("You lost");
+            println!("You ran out of tries. The correct solution was {:?}", solution);
         }
     }
     
 }
 
-fn calculate_correct_nums(solution: [u8; 4], row: [u8; 4]) -> u8 {
-    //TODO
-    1u8
+fn calculate_correct_nums(solution: &[u8; 4], new_row: &[u8; 4]) -> u8 {
+    let mut correct_nums: u8 = 0;
+    for i in 0..4 {
+        if solution.contains(&new_row[i]) && solution[i] != new_row[i] {
+            correct_nums += 1;
+        }
+    }
+    correct_nums
 }
 
-fn calculate_correct_places(solution: [u8; 4], row: [u8; 4]) -> u8 {
-    //TODO
-    1u8
+fn calculate_correct_places(solution: &[u8; 4], new_row: &[u8; 4]) -> u8 {
+    let mut correct_places: u8 = 0;
+    for i in 0..4 {
+        if solution[i] == new_row[i] {
+            correct_places += 1;
+        }
+    }
+    correct_places
 }
 
-fn get_new_row() -> [u8; 4] {
+fn get_new_valid_row() -> [u8; 4] {
     let mut row_out: [u8; 4];
-    loop {
+    'outer: loop {
         row_out = [0; 4];
         let input: String = get_input("new line : ");
         if input.split(',').count() >= 5{
@@ -58,9 +66,19 @@ fn get_new_row() -> [u8; 4] {
             row_out[i] = trimmed.parse().unwrap_or_else(|_| 0);
         }
         if !row_out.contains(&0u8) {
+            for i in row_out {
+                if i > 8 {
+                    println!("Invalid input. Only use numbers from 1 to 8");
+                    continue 'outer;
+                }
+                if row_out.iter().filter(|&n| *n == i).count() >= 2 {
+                    println!("Invalid input. You cant have duplicates");
+                    continue 'outer;
+                }
+            }
             break;
         }
-        println!("Invalid input. Use format 1, 2, 3, 4");
+        println!("Invalid input. Use format 1, 2, 3, 4 with numbers from 1 to 8");
     }
     row_out
 }
