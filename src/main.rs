@@ -86,7 +86,7 @@ fn get_new_valid_row() -> [u8; 4] {
 fn print_board(board: [[u8; 4]; 9], correct_num: [u8; 9], correct_place: [u8; 9]) {
     for i in 0..9 {
         if i == 0 {
-            println!("correct {:?} {:?} {:?} correct", correct_num[i], board[i], correct_place[i]);
+            println!("\ncorrect {:?} {:?} {:?} correct", correct_num[i], board[i], correct_place[i]);
         } else if i == 1 {
             println!(" number {:?} {:?} {:?} place", correct_num[i], board[i], correct_place[i]);
         } else {
