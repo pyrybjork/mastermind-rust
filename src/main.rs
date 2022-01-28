@@ -1,8 +1,20 @@
 use std::io;
 use std::io::Write;
 use rand::Rng;
+use std::env;
 
 fn main() {
+    let args: Vec<String> = env::args().collect();
+    if args.len() > 1 {
+        if args[1] == "--help"  {
+            help();
+            return;
+        }
+        if args[1] == "-h"  {
+            help();
+        }
+    }
+
     let mut rng = rand::thread_rng();
     let mut numbers: Vec<u8> = vec![1, 2, 3, 4, 5, 6, 7, 8];
     let mut solution = [0u8; 4];
@@ -31,6 +43,11 @@ fn main() {
         }
     }
     
+}
+
+fn help() {
+    println!("Mastermind is a game where you try to solve a 4 digit code consisting of numbers from 1 to 8. The code cannot have duplicates.");
+    println!("After each guess you are told how many of the numbers in your guess was correct numbers, but in the wrong places and how many of the numbers were exact match for the correct solution.");
 }
 
 fn calculate_correct_nums(solution: &[u8; 4], new_row: &[u8; 4]) -> u8 {
