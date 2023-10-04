@@ -1,2 +1,2 @@
 # mastermind-rust
-My first rust program
+My first rust program lol
